@@ -29,6 +29,7 @@ from skmultiflow.utils import check_random_state
 
 from .data_processing import split_dataintotwo, SplitIds, retrieve_datawithids
 
+
 class RegressorChainM(BaseSKMObject, RegressorMixin, MetaEstimatorMixin, MultiOutputMixin):
     """ Regressor Chains for multi-output learning.
     Parameters
@@ -390,17 +391,21 @@ def get_xyvaldata(X, Y, kfolds=None, kifold = None, split_ids = None, phase = 't
 
     return tr_x, tr_y, val_x, val_y
 
+def prmse(real, prediction):
+    EPSILON =  1e-10 
+    return (np.sqrt(np.mean(np.square((real - prediction) / (real + EPSILON))))) * 100
+
+
 def get_eval_metrics(real, prediction):
     return (pd.DataFrame({
                 'r2': [r2_score(y_true=real,
                                 y_pred=prediction)],
                 'rmse': [math.sqrt(mean_squared_error(y_true=real,
-                                y_pred=prediction))]}))
+                                y_pred=prediction))],
+                'prmse': [prmse(real=real,
+                                prediction=prediction)]}))
 
 class ElementsChainRegressor(RegressorChainM):
-
-    
-
 
     def cv_single_output_validation(self, Y_pred):
 
@@ -509,7 +514,8 @@ class ElementsChainRegressor(RegressorChainM):
         underlimit = True
         j = 0
         chain = element_to_predict
-
+        ### use all availaible elements for prediction
+        
         while len(availablelements)>0 and underlimit:
             #chainelements = copy.deepcopy(self.element_concentrations.data.columns)
             if j == 0:
