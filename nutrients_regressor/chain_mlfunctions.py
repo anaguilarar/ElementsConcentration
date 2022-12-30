@@ -392,11 +392,21 @@ def get_xyvaldata(X, Y, kfolds=None, kifold = None, split_ids = None, phase = 't
     return tr_x, tr_y, val_x, val_y
 
 def mae(real, prediction):
+    real, prediction = check_real_predictionshapes(real, prediction)
     real, prediction = np.array(real), np.array(prediction)
     return np.mean(np.abs(real - prediction))
 
+def check_real_predictionshapes(real, prediction):
+    if not len(real.shape) == len(prediction.shape):
+        if real.shape > prediction.shape:
+            real = np.squeeze(real)
+        else:
+            prediction = np.squeeze(prediction)
+    
+    return real, prediction
 
 def prmse(real, prediction):
+    real, prediction = check_real_predictionshapes(real, prediction)
     EPSILON =  1e-10 
     return (np.sqrt(np.mean(np.square((real - prediction) / (real + EPSILON))))) * 100
 
