@@ -391,6 +391,11 @@ def get_xyvaldata(X, Y, kfolds=None, kifold = None, split_ids = None, phase = 't
 
     return tr_x, tr_y, val_x, val_y
 
+def mae(real, prediction):
+    real, prediction = np.array(real), np.array(prediction)
+    return np.mean(np.abs(real - prediction))
+
+
 def prmse(real, prediction):
     EPSILON =  1e-10 
     return (np.sqrt(np.mean(np.square((real - prediction) / (real + EPSILON))))) * 100
@@ -403,6 +408,8 @@ def get_eval_metrics(real, prediction):
                 'rmse': [math.sqrt(mean_squared_error(y_true=real,
                                 y_pred=prediction))],
                 'prmse': [prmse(real=real,
+                                prediction=prediction)],
+                'mae': [mae(real=real,
                                 prediction=prediction)]}))
 
 class ElementsChainRegressor(RegressorChainM):
