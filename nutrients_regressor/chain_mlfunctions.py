@@ -545,7 +545,7 @@ class ElementsChainRegressor(RegressorChainM):
                 val_singleelement['chain'] = chain
                 #val_singleelement = training_initialmodel(self.features, elementsdata, kfolds)
                 r2ref = val_singleelement.r2.mean()
-                print('reference performance: {}'.format(r2ref))
+                print('reference performance: {:.3f}'.format(r2ref))
 
                 if checkpoint_path is not None:
                         outputpath = os.path.join(checkpoint_path, suffix_check)
@@ -567,7 +567,7 @@ class ElementsChainRegressor(RegressorChainM):
                     elementsdata = self.element_concentrations.data_elements(newchain.split('_'))
                     valmetrics = erc_performances(self.features, elementsdata, kfolds, newchain)
                     noisubset = valmetrics.loc[valmetrics.id == element_to_predict]
-                    print('chain {} perfomance: {}'.format(newchain, noisubset.r2.mean()))
+                    print('chain {} perfomance: {:.3f}'.format(newchain, noisubset.r2.mean()))
 
                     if checkpoint_path is not None:
                         outputpath = os.path.join(checkpoint_path, suffix_check)
