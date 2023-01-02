@@ -500,7 +500,9 @@ class ElementsChainRegressor(RegressorChainM):
         pass
 
 
-    def find_best_chain(self, element_to_predict, kfolds = None, not_include = None, checkpoint_path = None, suffix_check = '', thresh = 0.4):
+    def find_best_chain(self, element_to_predict, 
+                        kfolds = None, not_include = None, 
+                        checkpoint_path = None, suffix_check = '', thresh = 0.4, chain = None):
         
         def erc_performances(X, Y, kfolds, chain):
             valmetrics = []
@@ -529,10 +531,20 @@ class ElementsChainRegressor(RegressorChainM):
         availablelements.remove(element_to_predict)
 
         underlimit = True
-        j = 0
-        chain = element_to_predict
-        ### use all availaible elements for prediction
+        if chain is not None:
+            elementspre = chain.split('_')
+            for ele in elementspre:
+                if ele in availablelements:
+                    availablelements.remove(ele)
+            r2ref = 0
+            j = len(elementspre)-1
+        else:
+            j = 0
+            chain = element_to_predict
         
+            
+        ### use all availaible elements for prediction
+        print('initial elements ', availablelements)
         while len(availablelements)>0 and underlimit:
             #chainelements = copy.deepcopy(self.element_concentrations.data.columns)
             if j == 0:
